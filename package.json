@@ -1,0 +1,46 @@
+{
+  "name": "help-output",
+  "version": "1.0.0",
+  "description": "Generate cli help output",
+  "keywords": [
+    "cli",
+    "help",
+    "usage"
+  ],
+  "main": "./lib/index.js",
+  "author": "Lucian Cooper <cooperlucian@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luciancooper/help-msg.git"
+  },
+  "commitlint": {
+    "extends": [
+      "@lcooper"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint"
+  },
+  "dependencies": {
+    "ansi-regex": "^5.0.0",
+    "chalk": "^4.1.0",
+    "wrap-ansi": "^7.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@lcooper/commitlint-config": "^1.1.0",
+    "@lcooper/eslint-config": "^1.1.4",
+    "eslint": "^7.20.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^32.0.2",
+    "husky": "^5.0.9",
+    "lint-staged": "^10.5.4"
+  }
+}
