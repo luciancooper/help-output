@@ -32,7 +32,11 @@
     "*.js": "eslint"
   },
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setupTests.js"
+    ]
   },
   "dependencies": {
     "ansi-regex": "^5.0.0",
