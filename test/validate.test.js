@@ -47,6 +47,25 @@ describe('Config validator', () => {
         })).toThrowValidation('Duplicate option name:');
     });
 
+    test('detects invalid option `arg` field values', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                arg: true,
+            }, {
+                name: 'B',
+                arg: {},
+            }, {
+                name: 'C',
+                arg: [{}, null],
+            }],
+        })).toThrowValidation([
+            'Invalid option arg spec: improper value',
+            'Invalid option arg spec: object',
+            'Invalid option arg spec: array',
+        ]);
+    });
+
     test('detects invalid `conflicts` field values', () => {
         expect(() => validate({
             options: [{
@@ -123,9 +142,9 @@ describe('Config validator', () => {
         expect(() => validate({
             args: [{ name: 'arg' }],
             options: [
-                { name: 'A', requires: 'B' },
-                { name: 'B', conflicts: 'C' },
-                { name: 'C' },
+                { name: 'A', arg: ['x', 'y'], requires: 'B' },
+                { name: 'B', arg: 'x', conflicts: 'C' },
+                { name: 'C', arg: { name: 'x' } },
             ],
         })).not.toThrowValidation();
     });
