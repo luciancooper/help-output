@@ -31,10 +31,11 @@ describe('Config validator', () => {
     test('detects invalid argument & option names', () => {
         expect(() => validate({
             args: [{ name: true }],
-            options: [{ name: 5 }],
+            options: [{ name: 5 }, { name: '--' }],
         })).toThrowValidation([
             'Invalid argument name:',
-            'Invalid option name:',
+            'Invalid option name: type of',
+            "Invalid option name: '--'",
         ]);
     });
 
@@ -66,7 +67,7 @@ describe('Config validator', () => {
         ]);
     });
 
-    test('detects invalid `conflicts` field values', () => {
+    test('detects invalid `conflicts` property values', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
@@ -75,13 +76,25 @@ describe('Config validator', () => {
         })).toThrowValidation('Invalid conflicts field:');
     });
 
+    test('detects invalid `conflicts` property values within an array', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: [null],
+            }],
+        })).toThrowValidation('Invalid conflicts field:');
+    });
+
     test('detects invalid conflict references', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                conflicts: 'B',
+                conflicts: ['B', '--'],
             }],
-        })).toThrowValidation('Invalid conflict reference:');
+        })).toThrowValidation([
+            'Invalid conflict reference: option',
+            "Invalid conflict reference: '--'",
+        ]);
     });
 
     test('detects invalid requires field values', () => {
@@ -89,8 +102,14 @@ describe('Config validator', () => {
             options: [{
                 name: 'A',
                 requires: 5,
+            }, {
+                name: 'B',
+                requires: '--',
             }],
-        })).toThrowValidation('Invalid requires field:');
+        })).toThrowValidation([
+            'Invalid requires field: type of',
+            "Invalid requires field: '--'",
+        ]);
     });
 
     test('detects invalid requires references', () => {
@@ -147,5 +166,19 @@ describe('Config validator', () => {
                 { name: 'C', arg: { name: 'x' } },
             ],
         })).not.toThrowValidation();
+    });
+
+    test('resolves prefixed option names & references', () => {
+        expect(validate({
+            options: [
+                { name: '--opt' },
+                { name: 'v', conflicts: '--opt' },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'opt' },
+                { name: 'v', conflicts: ['opt'] },
+            ],
+        });
     });
 });
