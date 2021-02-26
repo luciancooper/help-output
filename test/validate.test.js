@@ -181,4 +181,34 @@ describe('Config validator', () => {
             ],
         });
     });
+
+    test('silently removes duplicate conflict references', () => {
+        expect(validate({
+            options: [
+                { name: 'A', conflicts: ['B', 'B', 'C', 'C'] },
+                { name: 'B', conflicts: ['C', 'A', 'C'] },
+                { name: 'C' },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'A', conflicts: ['B', 'C'] },
+                { name: 'B', conflicts: ['C', 'A'] },
+                { name: 'C' },
+            ],
+        });
+    });
+
+    test('silently removes self-referencing conflicts & requirements', () => {
+        expect(validate({
+            options: [
+                { name: 'A', conflicts: 'A' },
+                { name: 'B', requires: 'B' },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'A', conflicts: [] },
+                { name: 'B', requires: undefined },
+            ],
+        });
+    });
 });
