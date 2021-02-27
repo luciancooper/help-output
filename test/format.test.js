@@ -1,91 +1,115 @@
 const Formatter = require('../lib/format');
 
 describe('the Formatter class', () => {
-    let formatter;
-
-    beforeAll(() => {
-        formatter = new Formatter({ color: false });
-    });
-
-    test('stringifies arg usage', () => {
-        const str = formatter.usageArg({
-            name: 'arg',
-            repeat: true,
+    describe('when instantiating', () => {
+        test('throws an error if styles config is not an object', () => {
+            expect(() => new Formatter(true, [])).toThrow('styles option must be an object');
         });
-        expect(str).toEqual('<arg> ...');
+
+        test('throws an error if styles config contains invalid properties', () => {
+            expect(() => new Formatter(true, {
+                arg: 5,
+                opton: 'green',
+                title: 'orange',
+            })).toThrowValidation([
+                "style value for 'arg' must be a string, array of strings, or null",
+                "'opton' is not a valid style key",
+                "'orange' is not a recognized style",
+            ]);
+        });
+
+        test('will not throw an error if styles config is valid', () => {
+            expect(() => new Formatter(true, {
+                arg: 'cyan',
+                option: null,
+                title: ['bgMagenta', 'italic'],
+            })).not.toThrowValidation();
+        });
     });
 
-    test('stringifies option usage', () => {
-        const str = formatter.usageOption({
-            type: 'option',
-            name: 'opt',
-            arg: ['<x>', {
-                name: 'y',
-                required: true,
-            }, {
-                name: '<z>',
-                optional: true,
+    describe('when stringifying', () => {
+        test('handles arg usage', () => {
+            const str = new Formatter(false).usageArg({
+                name: 'arg',
                 repeat: true,
-            }],
+            });
+            expect(str).toEqual('<arg> ...');
         });
-        expect(str).toEqual('[--opt <x> <y> [<z> ...]]');
-    });
 
-    test('stringifies option usage groupings', () => {
-        const str = formatter.usageOption({
-            type: 'exclusive-group',
-            members: [{
-                type: 'group',
-                members: [
-                    { type: 'option', name: 'a' },
-                    { type: 'option', name: 'b' },
-                ],
-            }, { type: 'option', name: 'c' }],
-        });
-        expect(str).toEqual('[[-a] [-b] | -c]');
-    });
-
-    test('stringifies option usage containing dependents', () => {
-        const str = formatter.usageOption({
-            type: 'option',
-            name: 'a',
-            dependent: {
+        test('handles option usage', () => {
+            const str = new Formatter(false).usageOption({
                 type: 'option',
-                name: 'b',
-            },
+                name: 'opt',
+                arg: ['<x>', {
+                    name: 'y',
+                    required: true,
+                }, {
+                    name: '<z>',
+                    optional: true,
+                    repeat: true,
+                }],
+            });
+            expect(str).toEqual('[--opt <x> <y> [<z> ...]]');
         });
-        expect(str).toEqual('[-a [-b]]');
-    });
 
-    test('rejects invalid arg usage inputs', () => {
-        expect(() => formatter.usageArg(null)).toThrow('Cannot format arg: null');
-    });
-
-    test('rejects invalid option usage types', () => {
-        expect(() => formatter.usageOption({ type: 'opt' })).toThrow("unknown option type 'opt'");
-    });
-
-    test('converts args to table row arrays', () => {
-        const row = formatter.argRow({
-            name: 'arg',
-            repeat: true,
-            required: false,
-            description: 'arg description',
+        test('handles option usage groupings', () => {
+            const str = new Formatter(false).usageOption({
+                type: 'exclusive-group',
+                members: [{
+                    type: 'group',
+                    members: [
+                        { type: 'option', name: 'a' },
+                        { type: 'option', name: 'b' },
+                    ],
+                }, { type: 'option', name: 'c' }],
+            });
+            expect(str).toEqual('[[-a] [-b] | -c]');
         });
-        expect(row).toStrictEqual(['[arg ...]', '', 'arg description']);
-    });
 
-    test('converts options to table row arrays', () => {
-        const row = formatter.optionRow({
-            name: 'opt',
-            arg: 'str',
-            description: 'opt description',
+        test('handles option usage containing dependents', () => {
+            const str = new Formatter(false).usageOption({
+                type: 'option',
+                name: 'a',
+                dependent: {
+                    type: 'option',
+                    name: 'b',
+                },
+            });
+            expect(str).toEqual('[-a [-b]]');
         });
-        expect(row).toStrictEqual(['--opt', '<str>', 'opt description']);
+
+        test('throws error on invalid arg usage inputs', () => {
+            expect(() => new Formatter(false).usageArg(null)).toThrow('Cannot format arg: null');
+        });
+
+        test('throws error on invalid option usage types', () => {
+            expect(() => new Formatter(false).usageOption({ type: 'opt' })).toThrow("unknown option type 'opt'");
+        });
     });
 
-    test('formats output section titles', () => {
-        const title = formatter.sectionTitle('title');
-        expect(title).toEqual('title');
+    describe('will format', () => {
+        test('arg table rows', () => {
+            const row = new Formatter(false).argRow({
+                name: 'arg',
+                repeat: true,
+                required: false,
+                description: 'arg description',
+            });
+            expect(row).toStrictEqual(['[arg ...]', '', 'arg description']);
+        });
+
+        test('option table rows', () => {
+            const row = new Formatter(false).optionRow({
+                name: 'opt',
+                arg: 'str',
+                description: 'opt description',
+            });
+            expect(row).toStrictEqual(['--opt', '<str>', 'opt description']);
+        });
+
+        test('output section titles', () => {
+            const title = new Formatter(false).sectionTitle('title');
+            expect(title).toEqual('title');
+        });
     });
 });

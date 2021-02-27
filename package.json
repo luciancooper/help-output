@@ -40,13 +40,14 @@
   },
   "dependencies": {
     "ansi-regex": "^5.0.0",
-    "chalk": "^4.1.0",
+    "ansi-styles": "^4.3.0",
     "wrap-ansi": "^7.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@lcooper/commitlint-config": "^1.1.0",
     "@lcooper/eslint-config": "^1.1.4",
+    "chalk": "^4.1.0",
     "eslint": "^7.20.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^32.0.2",
