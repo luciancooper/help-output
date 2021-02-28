@@ -1,6 +1,6 @@
 const validate = require('../lib/validate');
 
-describe('Config validator', () => {
+describe('config validator', () => {
     test('detects invalid config structure', () => {
         expect(() => validate({
             args: 'name',
@@ -64,6 +64,21 @@ describe('Config validator', () => {
             'Invalid option arg spec: improper value',
             'Invalid option arg spec: object',
             'Invalid option arg spec: array',
+        ]);
+    });
+
+    test("detects option `arg` fields that start with '...'", () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                arg: '... arg',
+            }, {
+                name: 'B',
+                arg: ['arg1', '... arg2'],
+            }],
+        })).toThrowValidation([
+            "Invalid option arg spec: arg '... arg'",
+            "Invalid option arg spec: arg '... arg2'",
         ]);
     });
 
@@ -166,6 +181,23 @@ describe('Config validator', () => {
                 { name: 'C', arg: { name: 'x' } },
             ],
         })).not.toThrowValidation();
+    });
+
+    test('parses option arg strings to object form', () => {
+        expect(validate({
+            options: [{
+                name: 'opt',
+                arg: 'arg1 [<arg2>] ...',
+            }],
+        })).toMatchObject({
+            options: [{
+                name: 'opt',
+                arg: [
+                    { name: 'arg1', optional: false },
+                    { name: 'arg2', optional: true, repeat: true },
+                ],
+            }],
+        });
     });
 
     test('resolves prefixed option names & references', () => {
