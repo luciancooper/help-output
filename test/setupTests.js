@@ -1,4 +1,3 @@
-/* eslint-env jest */
 const chalk = require('chalk');
 
 expect.extend({
