@@ -21,25 +21,38 @@ expect.extend({
             }
             recievedErrors = e.errors;
         }
-        const failedMatches = expectedErrors.filter((substr) => (
-                !recievedErrors.some((str) => str.indexOf(substr) >= 0)
-            )),
-            pass = failedMatches.length === 0;
+        if (!expectedErrors.length) {
+            return {
+                pass: true,
+                message: () => (
+                    `Validation error thrown:${
+                        recievedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
+                    }`
+                ),
+            };
+        }
+        let pass = expectedErrors.length === recievedErrors.length;
+        if (pass) {
+            const remainingErrors = [...recievedErrors];
+            expectedErrors.forEach((substr) => {
+                const i = remainingErrors.findIndex((str) => str.indexOf(substr) >= 0);
+                if (i >= 0) remainingErrors.splice(i, 1);
+            });
+            pass = remainingErrors.length === 0;
+        }
         return {
             pass,
             message: pass ? () => (
                 `Errors found during validation:${
                     recievedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
-                }${
-                    expectedErrors.length ? `\nMatched the following substring(s) as expected:${
-                        expectedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
-                    }` : ''
+                }\nMatched expected error(s):${
+                    expectedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
                 }`
             ) : () => (
                 `Errors found during validation:${
                     recievedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
-                }\nDid not match the following substring(s) as expected:${
-                    failedMatches.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
+                }\nDid not match expected error(s):${
+                    expectedErrors.map((s) => chalk`\n {dim *} {yellow ${s}}`).join('')
                 }`
             ),
         };
