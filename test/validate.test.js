@@ -1,45 +1,69 @@
 const validate = require('../lib/validate');
 
-describe('config validator', () => {
-    test('detects invalid config structure', () => {
+describe('config `args` field', () => {
+    test('detects non array `args` field', () => {
         expect(() => validate({
-            args: 'name',
-            options: {},
-        })).toThrowValidation('Invalid config structure:');
+            args: {},
+        })).toThrowValidation("Invalid config structure: 'args'");
     });
 
-    test('detects invalid argument & option specs', () => {
+    test('detects non object arg specs', () => {
         expect(() => validate({
             args: ['arg'],
-            options: ['option'],
-        })).toThrowValidation([
-            'Invalid argument spec:',
-            'Invalid option spec:',
-        ]);
+        })).toThrowValidation('Invalid argument spec:');
     });
 
-    test('detects missing argument & option names', () => {
+    test('detects missing arg `name` values', () => {
         expect(() => validate({
             args: [{}],
-            options: [{}],
-        })).toThrowValidation([
-            'Missing argument name:',
-            'Missing option name:',
-        ]);
+        })).toThrowValidation('Missing argument name:');
     });
 
-    test('detects invalid argument & option names', () => {
+    test('detects invalid arg `name` types', () => {
         expect(() => validate({
             args: [{ name: true }],
-            options: [{ name: 5 }, { name: '--' }],
-        })).toThrowValidation([
-            'Invalid argument name:',
-            'Invalid option name: type of',
-            "Invalid option name: '--'",
-        ]);
+        })).toThrowValidation('Invalid argument name:');
     });
 
-    test('detects duplicate option names', () => {
+    test('recognizes valid arg `name` values', () => {
+        expect(() => validate({
+            args: [{ name: 'arg' }],
+        })).not.toThrowValidation();
+    });
+});
+
+describe('config `options` field', () => {
+    test('detects non array `options` field', () => {
+        expect(() => validate({
+            options: {},
+        })).toThrowValidation("Invalid config structure: 'options'");
+    });
+
+    test('detects non object option specs', () => {
+        expect(() => validate({
+            options: ['option'],
+        })).toThrowValidation('Invalid option spec:');
+    });
+
+    test('detects missing option `name` values', () => {
+        expect(() => validate({
+            options: [{}],
+        })).toThrowValidation('Missing option name:');
+    });
+
+    test('detects invalid option `name` types', () => {
+        expect(() => validate({
+            options: [{ name: 5 }],
+        })).toThrowValidation('Invalid option name: type of');
+    });
+
+    test('detects bad option `name` values', () => {
+        expect(() => validate({
+            options: [{ name: '--' }],
+        })).toThrowValidation("Invalid option name: '--'");
+    });
+
+    test('detects duplicate option `name` values', () => {
         expect(() => validate({
             options: [
                 { name: 'A' },
@@ -48,7 +72,17 @@ describe('config validator', () => {
         })).toThrowValidation('Duplicate option name:');
     });
 
-    test('detects invalid option `arg` field values', () => {
+    test('resolves prefixed option `name` values', () => {
+        expect(validate({
+            options: [{ name: '--opt' }],
+        })).toMatchObject({
+            options: [{ name: 'opt' }],
+        });
+    });
+});
+
+describe('config option `arg` field', () => {
+    test('detects invalid `arg` field values', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
@@ -67,7 +101,7 @@ describe('config validator', () => {
         ]);
     });
 
-    test("detects option `arg` fields that start with '...'", () => {
+    test("detects `arg` field strings that start with '...'", () => {
         expect(() => validate({
             options: [{
                 name: 'A',
@@ -82,108 +116,17 @@ describe('config validator', () => {
         ]);
     });
 
-    test('detects invalid `conflicts` property values', () => {
+    test('recognizes valid `arg` fields', () => {
         expect(() => validate({
-            options: [{
-                name: 'A',
-                conflicts: { name: 'B' },
-            }],
-        })).toThrowValidation('Invalid conflicts field:');
-    });
-
-    test('detects invalid `conflicts` property values within an array', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                conflicts: [null],
-            }],
-        })).toThrowValidation('Invalid conflicts field:');
-    });
-
-    test('detects invalid conflict references', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                conflicts: ['B', '--'],
-            }],
-        })).toThrowValidation([
-            'Invalid conflict reference: option',
-            "Invalid conflict reference: '--'",
-        ]);
-    });
-
-    test('detects invalid requires field values', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                requires: 5,
-            }, {
-                name: 'B',
-                requires: '--',
-            }],
-        })).toThrowValidation([
-            'Invalid requires field: type of',
-            "Invalid requires field: '--'",
-        ]);
-    });
-
-    test('detects invalid requires references', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                requires: 'B',
-            }],
-        })).toThrowValidation('Invalid requires reference:');
-    });
-
-    test('detects contradictory references within option specs', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                requires: 'B',
-                conflicts: ['B'],
-            }, {
-                name: 'B',
-            }],
-        })).toThrowValidation('Contradictory reference:');
-    });
-
-    test('detects contradictory references across option specs', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                requires: 'B',
-            }, {
-                name: 'B',
-                conflicts: 'A',
-            }],
-        })).toThrowValidation('Contradictory reference');
-    });
-
-    test('detects circular require relationships between options', () => {
-        expect(() => validate({
-            options: [{
-                name: 'A',
-                requires: 'B',
-            }, {
-                name: 'B',
-                requires: 'A',
-            }],
-        })).toThrowValidation('Circular require:');
-    });
-
-    test('recognizes valid configs', () => {
-        expect(() => validate({
-            args: [{ name: 'arg' }],
             options: [
-                { name: 'A', arg: ['x', 'y'], requires: 'B' },
-                { name: 'B', arg: 'x', conflicts: 'C' },
-                { name: 'C', arg: { name: 'x' } },
+                { name: 'opt1', arg: 'x ...' },
+                { name: 'opt2', arg: { name: 'x' } },
+                { name: 'opt3', arg: ['x', { name: 'y' }] },
             ],
         })).not.toThrowValidation();
     });
 
-    test('parses option arg strings to object form', () => {
+    test('parses option `arg` strings to object form', () => {
         expect(validate({
             options: [{
                 name: 'opt',
@@ -199,22 +142,69 @@ describe('config validator', () => {
             }],
         });
     });
+});
 
-    test('resolves prefixed option names & references', () => {
+describe('config option `conflicts` field', () => {
+    test('detects invalid `conflicts` types', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: { name: 'B' },
+            }],
+        })).toThrowValidation('Invalid conflicts field:');
+    });
+
+    test('detects invalid `conflicts` types within an array', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: [null],
+            }],
+        })).toThrowValidation('Invalid conflicts field:');
+    });
+
+    test('detects invalid `conflicts` values', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: '--',
+            }],
+        })).toThrowValidation("Invalid conflict reference: '--'");
+    });
+
+    test('detects invalid `conflicts` values within an array', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: ['--'],
+            }],
+        })).toThrowValidation("Invalid conflict reference: '--'");
+    });
+
+    test('detects bad `conflicts` references', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                conflicts: 'B',
+            }],
+        })).toThrowValidation('Invalid conflict reference: option');
+    });
+
+    test('resolves prefixed `conflicts` references', () => {
         expect(validate({
             options: [
-                { name: '--opt' },
-                { name: 'v', conflicts: '--opt' },
+                { name: 'a' },
+                { name: 'b', conflicts: '-a' },
             ],
         })).toMatchObject({
             options: [
-                { name: 'opt' },
-                { name: 'v', conflicts: ['opt'] },
+                { name: 'a' },
+                { name: 'b', conflicts: ['a'] },
             ],
         });
     });
 
-    test('silently removes duplicate conflict references', () => {
+    test('silently removes duplicate `conflicts` values', () => {
         expect(validate({
             options: [
                 { name: 'A', conflicts: ['B', 'B', 'C', 'C'] },
@@ -230,17 +220,109 @@ describe('config validator', () => {
         });
     });
 
-    test('silently removes self-referencing conflicts & requirements', () => {
+    test('silently removes self-referencing `conflicts` values', () => {
+        expect(validate({
+            options: [{
+                name: 'A',
+                conflicts: 'A',
+            }],
+        })).toMatchObject({
+            options: [{
+                name: 'A',
+                conflicts: [],
+            }],
+        });
+    });
+});
+
+describe('config option `requires` field', () => {
+    test('detects invalid `requires` types', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                requires: 5,
+            }],
+        })).toThrowValidation('Invalid requires field: type of');
+    });
+
+    test('detects invalid `requires` values', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                requires: '--',
+            }],
+        })).toThrowValidation("Invalid requires field: '--'");
+    });
+
+    test('detects bad `requires` references', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                requires: 'B',
+            }],
+        })).toThrowValidation('Invalid requires reference:');
+    });
+
+    test('detects circular `requires` relationships between options', () => {
+        expect(() => validate({
+            options: [
+                { name: 'A', requires: 'B' },
+                { name: 'B', requires: 'A' },
+            ],
+        })).toThrowValidation('Circular require:');
+    });
+
+    test('resolves prefixed `requires` references', () => {
         expect(validate({
             options: [
-                { name: 'A', conflicts: 'A' },
-                { name: 'B', requires: 'B' },
+                { name: 'opt1' },
+                { name: 'opt2', requires: '--opt1' },
             ],
         })).toMatchObject({
             options: [
-                { name: 'A', conflicts: [] },
-                { name: 'B', requires: undefined },
+                { name: 'opt1' },
+                { name: 'opt2', requires: 'opt1' },
             ],
         });
+    });
+
+    test('silently removes self-referencing `requires` values', () => {
+        expect(validate({
+            options: [{
+                name: 'opt',
+                requires: 'opt',
+            }],
+        })).toMatchObject({
+            options: [{
+                name: 'opt',
+                requires: undefined,
+            }],
+        });
+    });
+});
+
+describe('config option contradictions', () => {
+    test('detects contradictory references within a single option', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                requires: 'B',
+                conflicts: ['B'],
+            }, {
+                name: 'B',
+            }],
+        })).toThrowValidation('Contradictory reference:');
+    });
+
+    test('detects contradictory references across multiple options', () => {
+        expect(() => validate({
+            options: [{
+                name: 'A',
+                requires: 'B',
+            }, {
+                name: 'B',
+                conflicts: 'A',
+            }],
+        })).toThrowValidation('Contradictory reference');
     });
 });
