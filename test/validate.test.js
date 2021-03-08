@@ -81,6 +81,80 @@ describe('config `options` field', () => {
     });
 });
 
+describe('config option `alias` field', () => {
+    test('detects invalid `alias` types', () => {
+        expect(() => validate({
+            options: [{ name: 'opt', alias: 5 }],
+        })).toThrowValidation('Invalid alias field:');
+    });
+
+    test('detects bad `alias` values', () => {
+        expect(() => validate({
+            options: [{ name: 'opt', alias: '-' }],
+        })).toThrowValidation("Invalid alias name: '-'");
+    });
+
+    test('detects multiple options with the same alias', () => {
+        expect(() => validate({
+            options: [
+                { name: 'opt1', alias: 'a' },
+                { name: 'opt2', alias: 'a' },
+            ],
+        })).toThrowValidation("Duplicate alias name: 'a'");
+    });
+
+    test('detects alias names that match option names', () => {
+        expect(() => validate({
+            options: [
+                { name: 'a' },
+                { name: 'opt', alias: 'a' },
+            ],
+        })).toThrowValidation("Duplicate option name: 'a'");
+    });
+
+    test('detects option names that match alias names', () => {
+        expect(() => validate({
+            options: [
+                { name: 'opt1', alias: 'a' },
+                { name: 'opt2', alias: 'a' },
+                { name: 'a' },
+            ],
+        })).toThrowValidation("Duplicate option name: 'a'");
+    });
+
+    test('resolves prefixed `alias` values', () => {
+        expect(validate({
+            options: [{ name: 'opt', alias: '-a' }],
+        })).toMatchObject({
+            options: [{ name: 'opt', alias: ['a'] }],
+        });
+    });
+
+    test('silently removes redundant `alias` values', () => {
+        expect(validate({
+            options: [
+                { name: 'opt', alias: ['opt'] },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'opt', alias: [] },
+            ],
+        });
+    });
+
+    test('silently removes duplicate `alias` values', () => {
+        expect(validate({
+            options: [
+                { name: 'opt', alias: ['o', 'o'] },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'opt', alias: ['o'] },
+            ],
+        });
+    });
+});
+
 describe('config option `arg` field', () => {
     test('detects invalid `arg` field values', () => {
         expect(() => validate({
@@ -204,6 +278,20 @@ describe('config option `conflicts` field', () => {
         });
     });
 
+    test('resolves `conflicts` alias references', () => {
+        expect(validate({
+            options: [
+                { name: 'opt1', alias: 'a' },
+                { name: 'opt2', conflicts: 'a' },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'opt1', alias: ['a'] },
+                { name: 'opt2', conflicts: ['opt1'] },
+            ],
+        });
+    });
+
     test('silently removes duplicate `conflicts` values', () => {
         expect(validate({
             options: [
@@ -281,6 +369,20 @@ describe('config option `requires` field', () => {
         })).toMatchObject({
             options: [
                 { name: 'opt1' },
+                { name: 'opt2', requires: 'opt1' },
+            ],
+        });
+    });
+
+    test('resolves `requires` alias references', () => {
+        expect(validate({
+            options: [
+                { name: 'opt1', alias: 'a' },
+                { name: 'opt2', requires: 'a' },
+            ],
+        })).toMatchObject({
+            options: [
+                { name: 'opt1', alias: ['a'] },
                 { name: 'opt2', requires: 'opt1' },
             ],
         });

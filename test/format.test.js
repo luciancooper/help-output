@@ -89,22 +89,42 @@ describe('the Formatter class', () => {
 
     describe('will format', () => {
         test('arg table rows', () => {
-            const row = new Formatter(false).argRow({
+            const rows = new Formatter(false).argRows([{
                 name: 'arg',
                 repeat: true,
                 required: false,
                 description: 'arg description',
-            });
-            expect(row).toStrictEqual(['[arg ...]', '', 'arg description']);
+            }]);
+            expect(rows).toStrictEqual([
+                ['[arg ...]', '', 'arg description'],
+            ]);
         });
 
         test('option table rows', () => {
-            const row = new Formatter(false).optionRow({
+            const rows = new Formatter(false).optionRows([{
                 name: 'opt',
                 arg: 'str',
                 description: 'opt description',
-            });
-            expect(row).toStrictEqual(['--opt', '<str>', 'opt description']);
+            }]);
+            expect(rows).toStrictEqual([
+                ['--opt', '<str>', 'opt description'],
+            ]);
+        });
+
+        test('option table rows with aliases', () => {
+            const row = new Formatter(false).optionRows([{
+                name: 'opt1',
+                arg: 'str',
+                description: 'opt1 description',
+            }, {
+                name: 'opt2',
+                alias: ['o'],
+                description: 'opt2 description',
+            }]);
+            expect(row).toStrictEqual([
+                ['    --opt1', '<str>', 'opt1 description'],
+                ['-o, --opt2', '', 'opt2 description'],
+            ]);
         });
 
         test('output section titles', () => {
