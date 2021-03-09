@@ -114,16 +114,17 @@ describe('the Formatter class', () => {
         test('option table rows with aliases', () => {
             const row = new Formatter(false).optionRows([{
                 name: 'opt1',
+                alias: ['aa'],
                 arg: 'str',
                 description: 'opt1 description',
             }, {
                 name: 'opt2',
-                alias: ['o'],
+                alias: ['bb', 'b'],
                 description: 'opt2 description',
             }]);
             expect(row).toStrictEqual([
-                ['    --opt1', '<str>', 'opt1 description'],
-                ['-o, --opt2', '', 'opt2 description'],
+                ['    --aa, --opt1', '<str>', 'opt1 description'],
+                ['-b, --bb, --opt2', '', 'opt2 description'],
             ]);
         });
 
