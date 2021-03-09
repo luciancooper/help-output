@@ -18,8 +18,8 @@ describe('usage section formatter', () => {
         const str = formatUsage('test', mockUsage, 60);
         expect(typeof str).toBe('string');
         expect(str.split('\n')).toEqual([
-            'test <arg> [--message <msg>] [--quiet | --verbose] [--help]',
-            '     [--version]',
+            'test <arg> [--message <msg>]',
+            '     [--quiet | --verbose] [--help] [--version]',
         ]);
     });
 
@@ -29,8 +29,8 @@ describe('usage section formatter', () => {
         expect(str.split('\n')).toEqual([
             'test <arg>',
             '     [-m <msg>]',
-            '     [-q | -V] [-h]',
-            '     [-v]',
+            '     [-q | -V]',
+            '     [-h] [-v]',
         ]);
     });
 
