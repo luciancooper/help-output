@@ -29,17 +29,21 @@ describe('the Formatter class', () => {
 
     describe('when stringifying', () => {
         test('handles arg usage', () => {
-            const str = new Formatter(false).usageArg({
+            const result = new Formatter(false).usageArg({
                 name: 'arg',
                 repeat: true,
             });
-            expect(str).toEqual('<arg> ...');
+            expect(result).toEqual({
+                long: '<arg> ...',
+                short: '<arg> ...',
+            });
         });
 
         test('handles option usage', () => {
-            const str = new Formatter(false).usageOption({
+            const result = new Formatter(false).usageOption({
                 type: 'option',
                 name: 'opt',
+                alias: ['o'],
                 arg: ['<x>', {
                     name: 'y',
                     required: true,
@@ -49,33 +53,43 @@ describe('the Formatter class', () => {
                     repeat: true,
                 }],
             });
-            expect(str).toEqual('[--opt <x> <y> [<z> ...]]');
+            expect(result).toEqual({
+                long: '[--opt <x> <y> [<z> ...]]',
+                short: '[-o <x> <y> [<z> ...]]',
+            });
         });
 
         test('handles option usage groupings', () => {
-            const str = new Formatter(false).usageOption({
+            const result = new Formatter(false).usageOption({
                 type: 'exclusive-group',
                 members: [{
                     type: 'group',
                     members: [
-                        { type: 'option', name: 'a' },
-                        { type: 'option', name: 'b' },
+                        { type: 'option', name: 'opt1', alias: ['a'] },
+                        { type: 'option', name: 'opt2', alias: ['b'] },
                     ],
-                }, { type: 'option', name: 'c' }],
+                }, { type: 'option', name: 'opt3', alias: ['c'] }],
             });
-            expect(str).toEqual('[[-a] [-b] | -c]');
+            expect(result).toEqual({
+                long: '[[--opt1] [--opt2] | --opt3]',
+                short: '[[-a] [-b] | -c]',
+            });
         });
 
         test('handles option usage containing dependents', () => {
-            const str = new Formatter(false).usageOption({
+            const result = new Formatter(false).usageOption({
                 type: 'option',
-                name: 'a',
+                name: 'opt',
+                alias: ['a'],
                 dependent: {
                     type: 'option',
                     name: 'b',
                 },
             });
-            expect(str).toEqual('[-a [-b]]');
+            expect(result).toEqual({
+                long: '[--opt [-b]]',
+                short: '[-a [-b]]',
+            });
         });
 
         test('throws error on invalid arg usage inputs', () => {
