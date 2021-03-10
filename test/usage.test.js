@@ -34,6 +34,17 @@ describe('usage section formatter', () => {
         ]);
     });
 
+    test('will use long form args if maximum width provides enough space', () => {
+        const str = formatUsage('test', mockUsage, 30, 20);
+        expect(typeof str).toBe('string');
+        expect(str.split('\n')).toEqual([
+            'test <arg>',
+            '     [--message <msg>]',
+            '     [--quiet | --verbose]',
+            '     [--help] [--version]',
+        ]);
+    });
+
     test('hides usage args if available width is very severely limited', () => {
         const str = formatUsage('test', mockUsage, 10);
         expect(str).toEqual('test ...');
