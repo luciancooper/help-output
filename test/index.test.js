@@ -5,6 +5,10 @@ describe('exported module', () => {
         expect(typeof helpOutput).toBe('function');
     });
 
+    test('throws an error if a config object is not passed as the first argument', () => {
+        expect(() => helpOutput()).toThrow('A config object is required');
+    });
+
     describe('help message output', () => {
         const mockConfig = {
             name: 'test',
