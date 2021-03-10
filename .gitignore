@@ -49,3 +49,6 @@ yarn-error.log*
 
 # Output of 'npm pack'
 *.tgz
+
+# Coverage report build files
+coverage

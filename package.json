@@ -10,7 +10,8 @@
   "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "author": "Lucian Cooper <cooperlucian@gmail.com>",
   "license": "MIT",
@@ -35,6 +36,10 @@
   "jest": {
     "verbose": true,
     "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "lib/**/*.js"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/setupTests.js"
     ]
