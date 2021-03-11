@@ -8,11 +8,11 @@ describe('the Formatter class', () => {
 
         test('throws an error if styles config contains invalid properties', () => {
             expect(() => new Formatter(true, {
-                arg: 5,
+                positional: 5,
                 opton: 'green',
                 title: 'orange',
             })).toThrowValidation([
-                "style value for 'arg' must be a string, array of strings, or null",
+                "style value for 'positional' must be a string, array of strings, or null",
                 "'opton' is not a valid style key",
                 "'orange' is not a recognized style",
             ]);
@@ -20,7 +20,7 @@ describe('the Formatter class', () => {
 
         test('will not throw an error if styles config is valid', () => {
             expect(() => new Formatter(true, {
-                arg: 'cyan',
+                positional: 'cyan',
                 option: null,
                 title: ['bgMagenta', 'italic'],
             })).not.toThrowValidation();
@@ -102,8 +102,8 @@ describe('the Formatter class', () => {
     });
 
     describe('will format', () => {
-        test('arg table rows', () => {
-            const rows = new Formatter(false).argRows([{
+        test('positional table rows', () => {
+            const rows = new Formatter(false).positionalRows([{
                 name: 'arg',
                 repeat: true,
                 required: false,

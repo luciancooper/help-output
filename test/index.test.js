@@ -12,7 +12,7 @@ describe('exported module', () => {
     describe('help message output', () => {
         const mockConfig = {
             name: 'test',
-            args: [{
+            positional: [{
                 name: 'arg',
                 description: 'A positional argument',
             }],

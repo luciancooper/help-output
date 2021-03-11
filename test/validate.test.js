@@ -1,33 +1,33 @@
 const validate = require('../lib/validate');
 
-describe('config `args` field', () => {
-    test('detects non array `args` field', () => {
+describe('config `positional` field', () => {
+    test('detects non array `positional` field', () => {
         expect(() => validate({
-            args: {},
-        })).toThrowValidation("Invalid config structure: 'args'");
+            positional: {},
+        })).toThrowValidation("Invalid config structure: 'positional'");
     });
 
-    test('detects non object arg specs', () => {
+    test('detects non object positional arg specs', () => {
         expect(() => validate({
-            args: ['arg'],
-        })).toThrowValidation('Invalid argument spec:');
+            positional: ['arg'],
+        })).toThrowValidation('Invalid positional arg spec:');
     });
 
-    test('detects missing arg `name` values', () => {
+    test('detects missing positional arg `name` values', () => {
         expect(() => validate({
-            args: [{}],
-        })).toThrowValidation('Missing argument name:');
+            positional: [{}],
+        })).toThrowValidation('Missing positional arg name:');
     });
 
-    test('detects invalid arg `name` types', () => {
+    test('detects invalid positional arg `name` types', () => {
         expect(() => validate({
-            args: [{ name: true }],
-        })).toThrowValidation('Invalid argument name:');
+            positional: [{ name: true }],
+        })).toThrowValidation('Invalid positional arg name:');
     });
 
-    test('recognizes valid arg `name` values', () => {
+    test('recognizes valid positional arg `name` values', () => {
         expect(() => validate({
-            args: [{ name: 'arg' }],
+            positional: [{ name: 'arg' }],
         })).not.toThrowValidation();
     });
 });
