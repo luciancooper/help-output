@@ -58,29 +58,16 @@ const message = helpOutput({
         alias: 'v',
         description: 'Display program version',
     }],
-}, { width: 80, color: false });
+}, { width: 80 });
 
 console.log(message);
 ```
 
-In this example, the result will be the following string:
+Positional arguments and option flags are formatted into columns, and a git style usage section is automatically generated based on the information provided about them:
 
-```
-USAGE:
-  mycli <arg> [--log <lvl> | --quiet | --debug] [--help] [--version]
-
-ARGUMENTS:
-  arg              A required positional argument
-
-OPTIONS:
-      --log <lvl>  Set logging level ('error', 'warning', 'debug', or 'silent')
-  -q, --quiet      Silence console output, equivalent to setting --log='silent'
-  -d, --debug      Log verbose output, equivalent to setting --log='debug'
-  -h, --help       Display this help message
-  -v, --version    Display program version
-```
-
-A git style usage section is automatically generated based on the information provided about the programs positional arguments and options.
+<p align="center">
+    <img src="media/example.svg" alt="example"/>
+</p>
 
 ## API
 
