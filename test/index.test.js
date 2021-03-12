@@ -62,7 +62,7 @@ describe('exported module', () => {
         });
 
         test('collapses id column to minimize vertical span if width is limited', () => {
-            const str = helpOutput(mockConfig, { color: false, width: 35 });
+            const str = helpOutput(mockConfig, { color: false, width: 45 });
             expect(typeof str).toBe('string');
             expect(str.split('\n')).toEqual([
                 'USAGE:',
@@ -71,20 +71,15 @@ describe('exported module', () => {
                 '       [--help] [--version]',
                 '',
                 'ARGUMENTS:',
-                '  arg             A positional',
-                '                  argument',
+                '  arg             A positional argument',
                 '',
                 'OPTIONS:',
-                '      --message   An optional',
-                '           <msg>  message string',
-                '  -q, --quiet     Do not log any',
-                '                  output',
-                '  -V, --verbose   Log verbose',
-                '                  output',
-                '  -h, --help      Display help',
-                '                  message',
-                '  -v, --version   Display program',
-                '                  version',
+                '      --message   An optional message string',
+                '           <msg>',
+                '  -q, --quiet     Do not log any output',
+                '  -V, --verbose   Log verbose output',
+                '  -h, --help      Display help message',
+                '  -v, --version   Display program version',
             ]);
         });
 
