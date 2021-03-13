@@ -23,10 +23,12 @@ module.exports = [{
         }, {
             name: 'help',
             alias: 'h',
+            preferAlias: true,
             description: 'Display this help message',
         }, {
             name: 'version',
             alias: 'v',
+            preferAlias: true,
             description: 'Display program version',
         }],
     },

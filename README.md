@@ -52,10 +52,12 @@ const message = helpOutput({
     }, {
         name: 'help',
         alias: 'h',
+        preferAlias: true,
         description: 'Display this help message',
     }, {
         name: 'version',
         alias: 'v',
+        preferAlias: true,
         description: 'Display program version',
     }],
 }, { width: 80 });
@@ -104,6 +106,7 @@ An array of objects specifying your programs option flags. They will be displaye
    * `description` - A description of the option. This property is not strictly required, but is strongly encouraged.
    * `arg` - A string, object, or array of either specifying one or more positional arguments the option takes. Object specs use the same structure as those specified in `config.positional` (minus the `description` field). String specs are equivalent to specifiying an object containing only a `name` property.
    * `alias` - A string or array of strings specifying any aliases for the option.
+   * `preferAlias` - A boolean or string indicating that the options alias name should be used in the program usage section that gets generated. If value is a string, it must be one of the alias names specified for the option. Defaults to `false`.
    * `requires` - The name of another option that this option requires. Make sure that the option referenced here has been configured, otherwise an error will be thrown. References to alias names are allowed.
    * `conflicts` - Another option name or array of names that this option conflicts with. Make sure that these option names specified here reference other options that have been configured, otherwise an error will be thrown. References to alias names are allowed.
 
