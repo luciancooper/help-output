@@ -27,8 +27,8 @@ describe('the Formatter class', () => {
         });
     });
 
-    describe('when stringifying', () => {
-        test('handles arg usage', () => {
+    describe('when stringifying usage', () => {
+        test('correctly formats positional args', () => {
             const result = new Formatter(false).usageArg({
                 name: 'arg',
                 repeat: true,
@@ -39,7 +39,7 @@ describe('the Formatter class', () => {
             });
         });
 
-        test('handles option usage', () => {
+        test('correctly formats options', () => {
             const result = new Formatter(false).usageOption({
                 type: 'option',
                 name: 'opt',
@@ -59,7 +59,7 @@ describe('the Formatter class', () => {
             });
         });
 
-        test('handles option usage groupings', () => {
+        test('correctly formats option groupings', () => {
             const result = new Formatter(false).usageOption({
                 type: 'exclusive-group',
                 members: [{
@@ -76,7 +76,7 @@ describe('the Formatter class', () => {
             });
         });
 
-        test('handles option usage containing dependents', () => {
+        test('correctly formats options with dependents', () => {
             const result = new Formatter(false).usageOption({
                 type: 'option',
                 name: 'opt',
@@ -92,11 +92,30 @@ describe('the Formatter class', () => {
             });
         });
 
-        test('throws error on invalid arg usage inputs', () => {
+        test('always uses an options alias if `preferAlias` is present', () => {
+            const result = new Formatter(false).stringifyOption({
+                type: 'option',
+                name: 'opt',
+                alias: ['o'],
+                preferAlias: 'o',
+            }, false);
+            expect(result).toEqual('[-o]');
+        });
+
+        test('does not use an options alias if it is longer than the options name', () => {
+            const result = new Formatter(false).stringifyOption({
+                type: 'option',
+                name: 'msg',
+                alias: ['message'],
+            }, true);
+            expect(result).toBe('[--msg]');
+        });
+
+        test('throws error on invalid positional arg inputs', () => {
             expect(() => new Formatter(false).usageArg(null)).toThrow('Cannot format arg: null');
         });
 
-        test('throws error on invalid option usage types', () => {
+        test('throws error on invalid option types', () => {
             expect(() => new Formatter(false).usageOption({ type: 'opt' })).toThrow("unknown option type 'opt'");
         });
     });

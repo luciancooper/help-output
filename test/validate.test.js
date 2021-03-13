@@ -155,6 +155,44 @@ describe('config option `alias` field', () => {
     });
 });
 
+describe('config option `preferAlias` field', () => {
+    test('detects invalid `preferAlias` types', () => {
+        expect(() => validate({
+            options: [{ name: 'opt', alias: 'o', preferAlias: [] }],
+        })).toThrowValidation("Invalid preferAlias field: spec for option 'opt' must be a boolean or string");
+    });
+
+    test('detects bad `preferAlias` references', () => {
+        expect(() => validate({
+            options: [{ name: 'opt', alias: 'a', preferAlias: 'b' }],
+        })).toThrowValidation("Invalid preferAlias field: 'b' does not match any alias of 'opt'");
+    });
+
+    test('resolves prefixed `preferAlias` values', () => {
+        expect(validate({
+            options: [{ name: 'opt', alias: 'o', preferAlias: '-o' }],
+        })).toMatchObject({
+            options: [{ name: 'opt', alias: ['o'], preferAlias: 'o' }],
+        });
+    });
+
+    test('resolves `preferAlias: true` as the first alias specified when multiple aliases are present', () => {
+        expect(validate({
+            options: [{ name: 'opt', alias: ['a', 'b'], preferAlias: true }],
+        })).toMatchObject({
+            options: [{ name: 'opt', alias: ['a', 'b'], preferAlias: 'a' }],
+        });
+    });
+
+    test('silently ignores `preferAlias: true` when no aliases are present', () => {
+        expect(validate({
+            options: [{ name: 'opt', preferAlias: true }],
+        })).toMatchObject({
+            options: [{ name: 'opt', preferAlias: false }],
+        });
+    });
+});
+
 describe('config option `arg` field', () => {
     test('detects invalid `arg` field values', () => {
         expect(() => validate({
