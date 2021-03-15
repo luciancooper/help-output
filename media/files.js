@@ -2,6 +2,7 @@ module.exports = [{
     id: 'example',
     config: {
         name: 'mycli',
+        description: 'A cli program that does something useful',
         positional: [{
             name: 'arg',
             description: 'A required positional argument',

@@ -31,6 +31,7 @@ const helpOutput = require('help-output')
 
 const message = helpOutput({
     name: 'mycli',
+    description: 'A cli program that does something useful',
     positional: [{
         name: 'arg',
         description: 'A required positional argument',
@@ -84,6 +85,24 @@ A function that takes a `config` object and `options` object as arguments, and r
 Type: `string`
 
 The name of your cli program. If left unspecified, a name will be inferred from `process.argv`.
+
+##### `config.title`
+
+Type: `string`
+
+An optional title to display at the top of the outputted help message. It can it can include two placeholder strings, `%name` and `%version`, which will be replaced by the values of `config.name` and `config.version`, respectively.
+
+##### `config.version`
+
+Type: `string`
+
+The programs current version. This field only necessary if `config.title` is set and includes the `%version` placeholder string.
+
+##### `config.description`
+
+Type: `string`
+
+An optional description of what the program does. If specified, it will be displayed at the top of the outputted help message, just below `config.title`.
 
 ##### `config.positional`
 
