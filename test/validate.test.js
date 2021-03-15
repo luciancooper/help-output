@@ -1,5 +1,19 @@
 const validate = require('../lib/validate');
 
+describe('config `title` field', () => {
+    test('detects non string `title` values', () => {
+        expect(() => validate({
+            title: {},
+        })).toThrowValidation("Invalid title field: 'title' must be a string");
+    });
+
+    test('detects missing `version` values when `title` includes placeholder', () => {
+        expect(() => validate({
+            title: '%name %version',
+        })).toThrowValidation("Invalid title field: 'version' field must be specified if 'title' includes placeholder");
+    });
+});
+
 describe('config `positional` field', () => {
     test('detects non array `positional` field', () => {
         expect(() => validate({

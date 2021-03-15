@@ -9,7 +9,47 @@ describe('exported module', () => {
         expect(() => helpOutput()).toThrow('A config object is required');
     });
 
-    describe('help message output', () => {
+    describe('help message header', () => {
+        test('top level title handles `%name` & `%version` placeholders', () => {
+            const str = helpOutput({
+                name: 'mycli',
+                version: '1.0.0',
+                title: '%name %version',
+            }, { color: false, width: 40 });
+            expect(str).toBe('mycli 1.0.0');
+        });
+
+        test('top level description wraps to specified width', () => {
+            const str = helpOutput({
+                description: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+            }, { color: false, width: 40 });
+            expect(typeof str).toBe('string');
+            expect(str.split('\n')).toEqual([
+                'Lorem Ipsum dolor sit amet, consectetur',
+                'adipiscing elit, sed do eiusmod tempor.',
+            ]);
+        });
+
+        test('top level description uses hard word wrap if width is sufficiently large', () => {
+            const str = helpOutput({
+                description: 'Lorem Ipsum dolor sit amet, consecteturadipiscingelitseddoeiusmodtempor.',
+            }, { color: false, width: 40 });
+            expect(typeof str).toBe('string');
+            expect(str.split('\n')).toEqual([
+                'Lorem Ipsum dolor sit amet, consectetura',
+                'dipiscingelitseddoeiusmodtempor.',
+            ]);
+        });
+
+        test('top level description is hidden if width is extremely limited', () => {
+            const str = helpOutput({
+                description: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+            }, { color: false, width: 10 });
+            expect(str).toBe('');
+        });
+    });
+
+    describe('help message columns', () => {
         const mockConfig = {
             name: 'test',
             positional: [{
@@ -41,7 +81,7 @@ describe('exported module', () => {
             }],
         };
 
-        test('does not collapse if available width is large', () => {
+        test('do not collapse if available width is large', () => {
             const str = helpOutput(mockConfig, { color: false, width: 80 });
             expect(typeof str).toBe('string');
             expect(str.split('\n')).toEqual([
@@ -61,7 +101,7 @@ describe('exported module', () => {
             ]);
         });
 
-        test('collapses id column to minimize vertical span if width is limited', () => {
+        test('collapse id column to minimize vertical span if width is limited', () => {
             const str = helpOutput(mockConfig, { color: false, width: 45 });
             expect(typeof str).toBe('string');
             expect(str.split('\n')).toEqual([
