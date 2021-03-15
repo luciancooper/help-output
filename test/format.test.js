@@ -10,7 +10,7 @@ describe('the Formatter class', () => {
             expect(() => new Formatter(true, {
                 positional: 5,
                 opton: 'green',
-                title: 'orange',
+                header: 'orange',
             })).toThrowValidation([
                 "style value for 'positional' must be a string, array of strings, or null",
                 "'opton' is not a valid style key",
@@ -22,7 +22,7 @@ describe('the Formatter class', () => {
             expect(() => new Formatter(true, {
                 positional: 'cyan',
                 option: null,
-                title: ['bgMagenta', 'italic'],
+                header: ['bgMagenta', 'italic'],
             })).not.toThrowValidation();
         });
     });

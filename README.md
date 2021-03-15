@@ -165,6 +165,6 @@ Ansi colorization customizations This option is only relevant if `options.color`
 
  * `'positional'` - selector id for positional arguments (default style is `'yellow'`).
  * `'option'` - selector id for option names (default style is `'green'`).
- * `'title'` - selector id for section titles (default style is `'bold.underline'`).
+ * `'header'` - selector id for section headers (default style is `'bold.underline'`).
 
 Specifying `null` or `''` for a selector id will result in no style being applied. Check out [`ansi-styles`](https://github.com/chalk/ansi-styles) for a list of valid style values, (multiple values must be separated by a `'.'`, or supplied as an array).
