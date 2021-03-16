@@ -112,7 +112,7 @@ An array of objects specifying your programs positional arguments. They will be 
 
    * `name` - The name of the positional argument (**required**).
    * `description` - A description of the argument. This property is not strictly required, but is strongly encouraged.
-   * `optional` - A boolean (defaults to `false`) indicating whether the argument is optional.
+   * `required` - A boolean (defaults to `true`) indicating whether the argument is required.
    * `repeat` - A boolean (defaults to `false`) indicating whether the argument can be repeated.
 
 ##### `config.options`
@@ -123,6 +123,7 @@ An array of objects specifying your programs option flags. They will be displaye
 
    * `name` - The name of the option (**required**).
    * `description` - A description of the option. This property is not strictly required, but is strongly encouraged.
+   * `required` - A boolean (defaults to `false`) indicating whether the option is required.
    * `arg` - A string, object, or array of either specifying one or more positional arguments the option takes. Object specs use the same structure as those specified in `config.positional` (minus the `description` field). String specs are equivalent to specifiying an object containing only a `name` property.
    * `alias` - A string or array of strings specifying any aliases for the option.
    * `preferAlias` - A boolean or string indicating that the options alias name should be used in the program usage section that gets generated. If value is a string, it must be one of the alias names specified for the option. Defaults to `false`.
