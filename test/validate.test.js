@@ -262,9 +262,23 @@ describe('config option `arg` field', () => {
             options: [{
                 name: 'opt',
                 arg: [
-                    { name: 'arg1', optional: false },
-                    { name: 'arg2', optional: true, repeat: true },
+                    { name: 'arg1', required: true },
+                    { name: 'arg2', required: false, repeat: true },
                 ],
+            }],
+        });
+    });
+
+    test('accepts `arg.optional` as a substitute for `arg.required`', () => {
+        expect(validate({
+            options: [{
+                name: 'opt',
+                arg: { name: 'arg', optional: true },
+            }],
+        })).toMatchObject({
+            options: [{
+                name: 'opt',
+                arg: { name: 'arg', required: false },
             }],
         });
     });
