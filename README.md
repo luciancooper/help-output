@@ -113,7 +113,7 @@ An array of objects specifying your programs positional arguments. They will be 
    * `name` - The name of the positional argument (**required**).
    * `description` - A description of the argument. This property is not strictly required, but is strongly encouraged.
    * `required` - A boolean (defaults to `true`) indicating whether the argument is required.
-   * `repeat` - A boolean (defaults to `false`) indicating whether the argument can be repeated.
+   * `variadic` - A boolean (defaults to `false`) indicating whether the argument is variadic.
 
 ##### `config.options`
 

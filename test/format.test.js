@@ -38,8 +38,8 @@ describe('the Formatter class', () => {
             expect(str).toBe('[<arg>]');
         });
 
-        test('formats repeating args', () => {
-            const str = new Formatter(false).stringifyArg({ name: 'arg', repeat: true });
+        test('formats variadic args', () => {
+            const str = new Formatter(false).stringifyArg({ name: 'arg', variadic: true });
             expect(str).toBe('<arg> ...');
         });
     });
@@ -70,7 +70,7 @@ describe('the Formatter class', () => {
                 arg: [
                     '<x>',
                     { name: 'y', required: true },
-                    { name: '<z>', required: false, repeat: true },
+                    { name: '<z>', required: false, variadic: true },
                 ],
             });
             expect(str).toBe('[--opt <x> <y> [<z> ...]]');
@@ -220,7 +220,7 @@ describe('the Formatter class', () => {
         test('positional table rows', () => {
             const rows = new Formatter(false).positionalRows([{
                 name: 'arg',
-                repeat: true,
+                variadic: true,
                 required: false,
                 description: 'arg description',
             }]);

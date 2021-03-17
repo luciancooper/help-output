@@ -263,7 +263,7 @@ describe('config option `arg` field', () => {
                 name: 'opt',
                 arg: [
                     { name: 'arg1', required: true },
-                    { name: 'arg2', required: false, repeat: true },
+                    { name: 'arg2', required: false, variadic: true },
                 ],
             }],
         });
