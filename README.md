@@ -130,7 +130,7 @@ An array of objects specifying your programs option flags. They will be displaye
    * `dependsOn` - The name of another option that this option depends on. Make sure that the option referenced here has been configured, otherwise an error will be thrown. References to alias names are allowed.
    * `conflicts` - Another option name or array of names that this option conflicts with. Make sure that these option names specified here reference other options that have been configured, otherwise an error will be thrown. References to alias names are allowed.
 
-**Note:** relationships specified by the `dependsOn` and `conflicts` fields are reflected in the program usage section that is automatically generated.
+**Note:** relationships specified by the `dependsOn` and `conflicts` fields are reflected in the program usage section that is automatically generated. Check out the [examples](#Examples) section below for more information.
 
 #### Options
 
@@ -169,3 +169,106 @@ Ansi colorization customizations This option is only relevant if `options.color`
  * `'header'` - selector id for section headers (default style is `'bold.underline'`).
 
 Specifying `null` or `''` for a selector id will result in no style being applied. Check out [`ansi-styles`](https://github.com/chalk/ansi-styles) for a list of valid style values, (multiple values must be separated by a `'.'`, or supplied as an array).
+
+## Examples
+
+Additional information specified about a program option, such as whether it is required or if it depends on another option, is reflected in the program usage section that is included in the returned help message.
+
+The following example demonstrates how using the `required` and `dependsOn` fields will affect the resulting message.
+
+```js
+const message = helpOutput({
+    name: 'mycli',
+    options: [{
+        name: 'foo',
+        required: true,
+        description: 'A required flag',
+    }, {
+        name: 'bar',
+        description: 'An optional flag',
+    }, {
+        name: 'baz',
+        description: 'Another optional flag',
+    }, {
+        name: 'qux',
+        dependsOn: 'baz',
+        description: 'A flag that can only be specified if --baz is present',
+    }],
+});
+```
+
+The generated usage will indicate that the `--foo` flag must be present, the `--bar` and `--baz` flags are optional, and the `--qux` flag is allowed only if the `--baz` flag is present:
+
+<p align="center">
+    <img src="media/examples-basic.svg" alt="examples-basic"/>
+</p>
+
+### Mutually Exclusive Groups
+
+Option conflicts specified via the `conflicts` field will be indicated in the generated usage in form of mutually exclusive groups.
+Groups with required members are enclosed in parentheses, while groups with optional members are enclosed in brackets.
+
+> **Note:** all options that make up a mutually exclusive group must be either optional or required - attempting to have a mutually exclusive group with a mixture of optional and required members will result in an error being thrown.
+
+In the following example, the `--foo` and `--bar` flags form one group, and the `--baz` and `--qux` flags form another. 
+
+```js
+const message = helpOutput({
+    name: 'mycli',
+    options: [{
+        name: 'foo',
+        required: true,
+        conflicts: 'bar',
+        description: 'Part of a required mutually exclusive group with --bar',
+    }, {
+        name: 'bar',
+        required: true,
+        description: 'Part of a required mutually exclusive group with --foo',
+    }, {
+        name: 'baz',
+        conflicts: 'qux',
+        description: 'Part of an optional mutually exclusive group with --qux',
+    }, {
+        name: 'qux',
+        description: 'Part of an optional mutually exclusive group with --baz',
+    }],
+});
+```
+
+The generated usage will indicate that either the `--foo` or the `--bar` flag *must* be preset, and that either the `--baz` or the `--qux` flag may optionally be present:
+
+<p align="center">
+    <img src="media/examples-me-groups.svg" alt="examples-me-groups"/>
+</p>
+
+### Partially Exclusive Groups
+
+It is not a requirement that every member of a mutually exclusive group conflict with every other option in that group.
+
+In the following example `--foo` conflicts with the `--bar`, `--baz`, and `--qux` flags, but the latter three flags do not conflict with each other.
+
+```js
+const message = helpOutput({
+    name: 'mycli',
+    options: [{
+        name: 'foo',
+        conflicts: ['bar', 'baz', 'qux'],
+        description: 'Cannot be specified alongside --bar, --baz, or --qux',
+    }, {
+        name: 'bar',
+        description: 'Can be specified alongside --baz and --qux, but not --foo',
+    }, {
+        name: 'baz',
+        description: 'Can be specified alongside --bar and --qux, but not --foo',
+    }, {
+        name: 'qux',
+        description: 'Can be specified alongside --bar and --baz, but not --foo',
+    }],
+});
+```
+
+The generated usage will indicate that either the `--foo` flag may be present, or any combination of the `--bar`, `--baz`, and `--qux` flags may be present:
+
+<p align="center">
+    <img src="media/examples-pe-groups.svg" alt="examples-pe-groups"/>
+</p>
