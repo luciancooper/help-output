@@ -35,12 +35,17 @@ describe('the Formatter class', () => {
 
         test('formats optional args', () => {
             const str = new Formatter(false).stringifyArg({ name: 'arg', required: false });
-            expect(str).toBe('[<arg>]');
+            expect(str).toBe('[arg]');
         });
 
-        test('formats variadic args', () => {
+        test('formats required variadic args', () => {
             const str = new Formatter(false).stringifyArg({ name: 'arg', variadic: true });
-            expect(str).toBe('<arg> ...');
+            expect(str).toBe('<arg...>');
+        });
+
+        test('formats optional variadic args', () => {
+            const str = new Formatter(false).stringifyArg({ name: 'arg', required: false, variadic: true });
+            expect(str).toBe('[arg...]');
         });
     });
 
@@ -68,12 +73,12 @@ describe('the Formatter class', () => {
                 type: 'option',
                 name: 'opt',
                 arg: [
-                    '<x>',
+                    { name: 'x' },
                     { name: 'y', required: true },
-                    { name: '<z>', required: false, variadic: true },
+                    { name: 'z', required: false, variadic: true },
                 ],
             });
-            expect(str).toBe('[--opt <x> <y> [<z> ...]]');
+            expect(str).toBe('[--opt <x> <y> [z...]]');
         });
 
         test('formats mutually-exclusive option groups', () => {
@@ -225,14 +230,14 @@ describe('the Formatter class', () => {
                 description: 'arg description',
             }]);
             expect(rows).toStrictEqual([
-                ['[arg ...]', '', 'arg description'],
+                ['[arg...]', '', 'arg description'],
             ]);
         });
 
         test('option table rows', () => {
             const rows = new Formatter(false).optionRows([{
                 name: 'opt',
-                arg: 'str',
+                arg: { name: 'str' },
                 description: 'opt description',
             }]);
             expect(rows).toStrictEqual([
@@ -244,7 +249,7 @@ describe('the Formatter class', () => {
             const row = new Formatter(false).optionRows([{
                 name: 'opt1',
                 alias: ['aa'],
-                arg: 'str',
+                arg: { name: 'str' },
                 description: 'opt1 description',
             }, {
                 name: 'opt2',
