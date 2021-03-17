@@ -469,9 +469,9 @@ describe('Options usage resolver', () => {
         test('handles a single dependents', () => {
             const usage = optionsUsage([
                 { name: 'A', required: false },
-                { name: 'B', required: false, requires: 'A' },
+                { name: 'B', required: false, dependsOn: 'A' },
                 { name: 'C', required: false },
-                { name: 'D', required: true, requires: 'C' },
+                { name: 'D', required: true, dependsOn: 'C' },
             ]);
             expect(usage).toMatchObject([{
                 type: 'option',
@@ -489,11 +489,11 @@ describe('Options usage resolver', () => {
         test('handles multiple optional dependents', () => {
             const usage = optionsUsage([
                 { name: 'A', required: false },
-                { name: 'B', required: false, requires: 'A' },
-                { name: 'C', required: false, requires: 'A' },
+                { name: 'B', required: false, dependsOn: 'A' },
+                { name: 'C', required: false, dependsOn: 'A' },
                 { name: 'E', required: false },
-                { name: 'F', required: true, requires: 'E' },
-                { name: 'G', required: false, requires: 'E' },
+                { name: 'F', required: true, dependsOn: 'E' },
+                { name: 'G', required: false, dependsOn: 'E' },
             ]);
             expect(usage).toMatchObject([{
                 type: 'option',
@@ -523,10 +523,10 @@ describe('Options usage resolver', () => {
         test('handles dependency chains', () => {
             const usage = optionsUsage([
                 { name: 'A', required: false },
-                { name: 'B', required: false, requires: 'A' },
-                { name: 'C', required: false, requires: 'B' },
-                { name: 'D', required: false, requires: 'F' },
-                { name: 'E', required: true, requires: 'D' },
+                { name: 'B', required: false, dependsOn: 'A' },
+                { name: 'C', required: false, dependsOn: 'B' },
+                { name: 'D', required: false, dependsOn: 'F' },
+                { name: 'E', required: true, dependsOn: 'D' },
                 { name: 'F', required: false },
             ]);
             expect(usage).toMatchObject([{
@@ -555,7 +555,7 @@ describe('Options usage resolver', () => {
         test('handles dependencies with mutually exclusive relationships', () => {
             const usage = optionsUsage([
                 { name: 'A', required: false },
-                { name: 'B', required: false, requires: 'A' },
+                { name: 'B', required: false, dependsOn: 'A' },
                 { name: 'C', required: false, conflicts: 'B' },
             ]);
             expect(usage).toMatchObject([{

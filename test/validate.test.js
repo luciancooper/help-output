@@ -389,81 +389,81 @@ describe('config option `conflicts` field', () => {
     });
 });
 
-describe('config option `requires` field', () => {
-    test('detects invalid `requires` types', () => {
+describe('config option `dependsOn` field', () => {
+    test('detects invalid `dependsOn` types', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                requires: 5,
+                dependsOn: 5,
             }],
-        })).toThrowValidation('Invalid requires field: type of');
+        })).toThrowValidation('Invalid dependsOn field: type of');
     });
 
-    test('detects invalid `requires` values', () => {
+    test('detects invalid `dependsOn` values', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                requires: '--',
+                dependsOn: '--',
             }],
-        })).toThrowValidation("Invalid requires field: '--'");
+        })).toThrowValidation("Invalid dependsOn field: '--'");
     });
 
-    test('detects bad `requires` references', () => {
+    test('detects bad `dependsOn` references', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                requires: 'B',
+                dependsOn: 'B',
             }],
-        })).toThrowValidation('Invalid requires reference:');
+        })).toThrowValidation('Invalid dependsOn reference:');
     });
 
-    test('detects circular `requires` relationships between options', () => {
+    test('detects circular `dependsOn` relationships between options', () => {
         expect(() => validate({
             options: [
-                { name: 'A', requires: 'B' },
-                { name: 'B', requires: 'A' },
+                { name: 'A', dependsOn: 'B' },
+                { name: 'B', dependsOn: 'A' },
             ],
-        })).toThrowValidation('Circular require:');
+        })).toThrowValidation('Circular dependency:');
     });
 
-    test('resolves prefixed `requires` references', () => {
+    test('resolves prefixed `dependsOn` references', () => {
         expect(validate({
             options: [
                 { name: 'opt1' },
-                { name: 'opt2', requires: '--opt1' },
+                { name: 'opt2', dependsOn: '--opt1' },
             ],
         })).toMatchObject({
             options: [
                 { name: 'opt1' },
-                { name: 'opt2', requires: 'opt1' },
+                { name: 'opt2', dependsOn: 'opt1' },
             ],
         });
     });
 
-    test('resolves `requires` alias references', () => {
+    test('resolves `dependsOn` alias references', () => {
         expect(validate({
             options: [
                 { name: 'opt1', alias: 'a' },
-                { name: 'opt2', requires: 'a' },
+                { name: 'opt2', dependsOn: 'a' },
             ],
         })).toMatchObject({
             options: [
                 { name: 'opt1', alias: ['a'] },
-                { name: 'opt2', requires: 'opt1' },
+                { name: 'opt2', dependsOn: 'opt1' },
             ],
         });
     });
 
-    test('silently removes self-referencing `requires` values', () => {
+    test('silently removes self-referencing `dependsOn` values', () => {
         expect(validate({
             options: [{
                 name: 'opt',
-                requires: 'opt',
+                dependsOn: 'opt',
             }],
         })).toMatchObject({
             options: [{
                 name: 'opt',
-                requires: undefined,
+                dependsOn: undefined,
             }],
         });
     });
@@ -474,7 +474,7 @@ describe('config option contradictions', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                requires: 'B',
+                dependsOn: 'B',
                 conflicts: ['B'],
             }, {
                 name: 'B',
@@ -486,7 +486,7 @@ describe('config option contradictions', () => {
         expect(() => validate({
             options: [{
                 name: 'A',
-                requires: 'B',
+                dependsOn: 'B',
             }, {
                 name: 'B',
                 conflicts: 'A',
