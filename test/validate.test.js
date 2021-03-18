@@ -44,6 +44,14 @@ describe('config `positional` field', () => {
             positional: [{ name: 'arg' }],
         })).not.toThrowValidation();
     });
+
+    test('parses additional information from positional arg `name` values', () => {
+        expect(validate({
+            positional: [{ name: '[arg...]' }],
+        })).toMatchObject({
+            positional: [{ name: 'arg', required: false, variadic: true }],
+        });
+    });
 });
 
 describe('config `options` field', () => {
@@ -246,7 +254,7 @@ describe('config option `arg` field', () => {
         expect(() => validate({
             options: [
                 { name: 'opt1', arg: 'x ...' },
-                { name: 'opt2', arg: { name: 'x' } },
+                { name: 'opt2', arg: { name: 'x', required: false } },
                 { name: 'opt3', arg: ['x', { name: 'y' }] },
             ],
         })).not.toThrowValidation();
