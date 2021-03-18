@@ -262,9 +262,63 @@ describe('the Formatter class', () => {
             ]);
         });
 
-        test('output section titles', () => {
+        test('section titles', () => {
             const title = new Formatter(false).sectionTitle('title');
             expect(title).toEqual('title');
+        });
+    });
+
+    describe('will colorize', () => {
+        let formatter;
+
+        beforeAll(() => {
+            formatter = new Formatter(true, {
+                positional: 'yellow',
+                option: 'green',
+                header: 'bold.underline',
+            });
+        });
+
+        test('usage positional arg items', () => {
+            const str = formatter.stringifyArg({ name: 'foo' });
+            expect(str).toBe('\u001B[33m<foo>\u001B[39m');
+        });
+
+        test('usage option items', () => {
+            const str = formatter.stringifyOption({
+                type: 'option',
+                name: 'foo',
+                arg: { name: 'bar' },
+            });
+            expect(str).toBe('[\u001B[32m--foo\u001B[39m \u001B[33m<bar>\u001B[39m]');
+        });
+
+        test('positional arg table rows', () => {
+            const rows = formatter.positionalRows([{
+                name: 'foo',
+                variadic: true,
+                description: 'some foo',
+            }]);
+            expect(rows).toStrictEqual([
+                ['\u001B[33m<foo...>\u001B[39m', '', 'some foo'],
+            ]);
+        });
+
+        test('option table rows', () => {
+            const rows = formatter.optionRows([{
+                name: 'foo',
+                alias: ['f'],
+                arg: { name: 'bar' },
+                description: 'foo bar',
+            }]);
+            expect(rows).toStrictEqual([
+                ['\u001B[32m-f\u001B[39m, \u001B[32m--foo\u001B[39m', '\u001B[33m<bar>\u001B[39m', 'foo bar'],
+            ]);
+        });
+
+        test('section titles', () => {
+            const title = formatter.sectionTitle('header');
+            expect(title).toEqual('\u001B[1m\u001B[4mheader\u001B[24m\u001B[22m');
         });
     });
 });
