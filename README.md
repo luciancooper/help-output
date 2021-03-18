@@ -80,6 +80,8 @@ A function that takes a `config` object and `options` object as arguments, and r
 
 #### Configuration
 
+> **Note:** configuration validation is strict - an error will be thrown if any properties do not conform to the schema detailed below.
+
 ##### `config.name`
 
 Type: `string`
