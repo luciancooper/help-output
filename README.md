@@ -274,3 +274,27 @@ The generated usage will indicate that either the `--foo` flag may be present, o
 <p align="center">
     <img src="media/examples-pe-groups.svg" alt="examples-pe-groups"/>
 </p>
+
+## Development
+
+Contributions are welcome!
+
+To report a bug or request a feature, please [open a new issue](../../issues/new).
+
+### Running Tests 
+
+Install project dependencies and run the test suite with the following command:
+
+```bash
+yarn && yarn test
+```
+
+To generate coverage reports, run:
+
+```bash
+yarn coverage
+```
+
+## License
+
+[MIT](LICENSE)
