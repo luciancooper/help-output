@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luciancooper/help-msg.git"
+    "url": "git+https://github.com/luciancooper/help-output.git"
   },
   "commitlint": {
     "extends": [
