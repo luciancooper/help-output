@@ -1,10 +1,29 @@
-# help-output
+<p align="center">
+  <a href="#">
+    <img src="media/logo.svg" alt="help-output">
+  </a>
+</p>
 
-[![travis](https://img.shields.io/travis/com/luciancooper/help-output/master?logo=travis&style=for-the-badge)](https://travis-ci.com/luciancooper/help-output)
-[![coverage](https://img.shields.io/codecov/c/gh/luciancooper/help-output?logo=codecov&style=for-the-badge)](https://codecov.io/gh/luciancooper/help-output)
-![LICENSE](https://img.shields.io/github/license/luciancooper/help-output?color=brightgreen&style=for-the-badge)
+<p align="center">
+  <b>Create beautifully formatted help messages for your command line program</b>
+</p>
 
-Create beautifully formatted help messages for your command line programs.
+<p align="center">
+  <a href="https://www.npmjs.com/package/help-output">
+    <img src="https://img.shields.io/npm/v/help-output?logo=npm&style=for-the-badge" alt="npm">
+  </a>
+  <a href="https://travis-ci.com/luciancooper/help-output">
+    <img src="https://img.shields.io/travis/com/luciancooper/help-output/master?logo=travis&style=for-the-badge" alt="travis">
+  </a>
+  <a href="https://codecov.io/gh/luciancooper/help-output">
+    <img src="https://img.shields.io/codecov/c/gh/luciancooper/help-output?logo=codecov&style=for-the-badge" alt="coverage">
+  </a>
+  <a href="#License">
+    <img src="https://img.shields.io/github/license/luciancooper/help-output?color=brightgreen&style=for-the-badge" alt="license">
+  </a>
+</p>
+
+---
 
 Pairs nicely with libraries like `minimist` and `yargs-parser` that are great for parsing command line arguments but don't have a help message generator built in.
 
@@ -69,7 +88,9 @@ console.log(message);
 Positional arguments and option flags are formatted into columns, and a git style usage section is automatically generated based on the information provided about them:
 
 <p align="center">
+  <a id="example-usage" href="#example-usage">
     <img src="media/example.svg" alt="example"/>
+  </a>
 </p>
 
 ## API
@@ -202,7 +223,9 @@ const message = helpOutput({
 The generated usage will indicate that the `--foo` flag must be present, the `--bar` and `--baz` flags are optional, and the `--qux` flag is allowed only if the `--baz` flag is present:
 
 <p align="center">
+  <a id="examples-basic" href="#examples-basic">
     <img src="media/examples-basic.svg" alt="examples-basic"/>
+  </a>
 </p>
 
 ### Mutually Exclusive Groups
@@ -240,7 +263,9 @@ const message = helpOutput({
 The generated usage will indicate that either the `--foo` or the `--bar` flag *must* be preset, and that either the `--baz` or the `--qux` flag may optionally be present:
 
 <p align="center">
+  <a id="examples-me-groups" href="#examples-me-groups">
     <img src="media/examples-me-groups.svg" alt="examples-me-groups"/>
+  </a>
 </p>
 
 ### Partially Exclusive Groups
@@ -272,7 +297,9 @@ const message = helpOutput({
 The generated usage will indicate that either the `--foo` flag may be present, or any combination of the `--bar`, `--baz`, and `--qux` flags may be present:
 
 <p align="center">
+  <a id="examples-pe-groups" href="#examples-pe-groups">
     <img src="media/examples-pe-groups.svg" alt="examples-pe-groups"/>
+  </a>
 </p>
 
 ## Development
