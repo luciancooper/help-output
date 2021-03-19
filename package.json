@@ -1,7 +1,7 @@
 {
   "name": "help-output",
   "version": "1.0.0",
-  "description": "Generate cli help output",
+  "description": "Help message formatter for command line programs",
   "keywords": [
     "cli",
     "help",
