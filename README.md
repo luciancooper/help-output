@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <b>Create beautifully formatted help messages for your command line program</b>
+  <b>Create beautifully formatted help messages for your command line programs</b>
 </p>
 
 <p align="center">
@@ -19,13 +19,13 @@
     <img src="https://img.shields.io/codecov/c/gh/luciancooper/help-output?logo=codecov&style=for-the-badge" alt="coverage">
   </a>
   <a href="#License">
-    <img src="https://img.shields.io/github/license/luciancooper/help-output?color=brightgreen&style=for-the-badge" alt="license">
+    <img src="https://img.shields.io/github/license/luciancooper/help-output?color=yellow&style=for-the-badge" alt="license">
   </a>
 </p>
 
 ---
 
-Pairs nicely with libraries like `minimist` and `yargs-parser` that are great for parsing command line arguments but don't have a help message generator built in.
+Pairs nicely with libraries like [`minimist`](https://github.com/substack/minimist) and [`yargs-parser`](https://github.com/yargs/yargs-parser) that are great for parsing command line arguments but don't generate help messages.
 
 ## Installation
 
