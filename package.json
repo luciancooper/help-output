@@ -14,7 +14,6 @@
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "coverage": "jest --coverage",
     "prepublishOnly": "yarn test",
     "screencasts": "node tasks/screencasts.js"
   },
@@ -42,7 +41,6 @@
     "*.js": "eslint"
   },
   "jest": {
-    "verbose": true,
     "testEnvironment": "node",
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [

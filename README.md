@@ -319,7 +319,7 @@ yarn && yarn test
 To generate coverage reports, run:
 
 ```bash
-yarn coverage
+yarn test --coverage
 ```
 
 ## License
