@@ -5291,6 +5291,13 @@ tsutils@^3.17.1:
   dependencies:
     tslib "^1.8.1"
 
+tty-strings@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tty-strings/-/tty-strings-1.0.0.tgz#e2783376f70c9114423977542b7099234fef6db1"
+  integrity sha512-xCtEkzjpthtKcZoUpqViukH31vxiJm1RzHeazLyI2No2YpHmxP9BA6Bhf/Bt+KpJWBZ/K+gvrkuwYALyH4PSmg==
+  dependencies:
+    ansi-regex "^5.0.0"
+
 tunnel-agent@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"

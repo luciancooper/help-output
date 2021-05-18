@@ -51,9 +51,8 @@
     ]
   },
   "dependencies": {
-    "ansi-regex": "^5.0.0",
     "ansi-styles": "^4.3.0",
-    "wrap-ansi": "^7.0.0"
+    "tty-strings": "^1.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

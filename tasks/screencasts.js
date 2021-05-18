@@ -4,7 +4,7 @@ const fs = require('fs'),
     chalk = require('chalk'),
     { render } = require('svg-term'),
     { optimize } = require('svgo'),
-    ansi = require('../lib/ansi'),
+    { stripAnsi, stringWidth } = require('tty-strings'),
     helpOutput = require('../lib'),
     mediaFiles = require('../media/files');
 
@@ -114,11 +114,11 @@ async function fetchFontCss(charSubset, fontFamily) {
 async function renderScreencast(config, options) {
     const message = helpOutput(config, options),
         // strip ansi from output
-        plainMessage = ansi.strip(message),
+        plainMessage = stripAnsi(message),
         // determine character subset
         charSubset = [...new Set([...plainMessage.replace(/[\n\r]/g, '')])].sort().join(''),
         // width of the terminal
-        width = (options && options.width) || Math.max(...plainMessage.split('\n').map((l) => l.length)),
+        width = (options && options.width) || Math.max(...plainMessage.split('\n').map((l) => stringWidth(l))),
         // height of the terminal
         height = plainMessage.split('\n').length + 1;
 
