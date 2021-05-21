@@ -12,8 +12,8 @@
   <a href="https://www.npmjs.com/package/help-output">
     <img src="https://img.shields.io/npm/v/help-output?logo=npm&style=for-the-badge" alt="npm">
   </a>
-  <a href="https://travis-ci.com/luciancooper/help-output">
-    <img src="https://img.shields.io/travis/com/luciancooper/help-output/master?logo=travis&style=for-the-badge" alt="travis">
+  <a href="https://github.com/luciancooper/help-output/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/workflow/status/luciancooper/help-output/CI?logo=github&style=for-the-badge" alt="ci">
   </a>
   <a href="https://codecov.io/gh/luciancooper/help-output">
     <img src="https://img.shields.io/codecov/c/gh/luciancooper/help-output?logo=codecov&style=for-the-badge" alt="coverage">
